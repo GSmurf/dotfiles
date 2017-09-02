@@ -24,3 +24,6 @@ i3:
 
 xfce:
 	$(stow) xfce4
+
+pre-install:
+	sudo apt install stow
