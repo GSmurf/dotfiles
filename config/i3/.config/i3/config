@@ -27,7 +27,7 @@ client.placeholder      $background $background $foreground    #000000   $inacti
 client.background       $background
 
 # Fond d'écran
-exec_always --no-startup-id feh --bg-scale ~/Images/wallpaper.jpg
+#exec_always --no-startup-id feh --bg-scale ~/Images/wallpaper.jpg
 
 ###############################
 #         KEYBINDING          #
@@ -35,8 +35,10 @@ exec_always --no-startup-id feh --bg-scale ~/Images/wallpaper.jpg
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
-# start a terminal
-bindsym $mod+Return exec urxvt -cd "`xcwd`"
+# start a terminal ( pour voir la liste des fonts déjà installé : fc-list )
+# test : urxvt -fn xft:DejaVuSansMono
+# bindsym $mod+Return exec urxvt -fn xft:DejaVuSansMono-15 -cd "`xcwd`"
+bindsym $mod+Return exec urxvt -T float +hold -e zsh
 
 # kill focused window
 bindsym $mod+Shift+A kill
@@ -148,19 +150,19 @@ set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
-set $monitorCenter DVI-I-1
-set $monitorLeft   HDMI-0
-set $monitorRight  DVI-D-0
+# set $monitorCenter DVI-I-1
+# set $monitorLeft   HDMI-0
+# set $monitorRight  DVI-D-0
 
 # Ecran associé à chaque Workspace
-workspace $ws1 output $monitorCenter
-workspace $ws2 output $monitorCenter
-workspace $ws3 output $monitorCenter
-workspace $ws4 output $monitorCenter
-workspace $ws5 output $monitorLeft
-workspace $ws6 output $monitorLeft
-workspace $ws7 output $monitorRight
-workspace $ws8 output $monitorRight
+# workspace $ws1 output $monitorCenter
+# workspace $ws2 output $monitorCenter
+# workspace $ws3 output $monitorCenter
+# workspace $ws4 output $monitorCenter
+# workspace $ws5 output $monitorLeft
+# workspace $ws6 output $monitorLeft
+# workspace $ws7 output $monitorRight
+# workspace $ws8 output $monitorRight
 
 # Changmeent de Workspace
 bindsym $mod+ampersand workspace $ws1
@@ -193,28 +195,36 @@ bindsym $mod+Shift+ccedilla move container to workspace $ws9; workspace $ws9
 bindsym $mod+Shift+agrave move container to workspace $ws10; workspace $ws10
 
 # Force certaines apps à des wokspaces dédiés
-# Workspace 1 (Code)
-assign [class="jetbrains-idea|Code"]                            $ws1
-# Workspace 5 (Ecran gauche, Tchat)
-assign [class="discord|skypeforlinux"]                          $ws5
-# Workspace 6 (Ecran gauche, Versioning)
-assign [class="GitKraken"]                                      $ws6
-for_window [class="GitKraken"] focus
-# Workspace 7 (Ecran droite, Navigateur)
-# assign [class="Google-chrome|Vivaldi-stable|Opera|Firefox"]     $ws7
-# Workspace 8 (Ecran droite, Music)
-assign [class="Spotify"]                                        $ws8
-for_window [class="Spotify"]                  move to workspace $ws8
+# Pour trouver le nom de l'application on peut faire, le nom dans l'exemple ci dessous est 'Code'
+# gismo@gismo-HP-ProBook-450-G3: [~]: 
+# xprop | grep WM_CLASS
+# WM_CLASS(STRING) = "code", "Code"
+# Si la fenetre n'a pas son nom definitif lors de son execution on peut utiliser ce genre de config qui la deplacera quand son nom definitif sera detecter !
+# for_window [class="Chromium"]                 move to workspace $ws3
+
+# Workspfiace 1 (Code)
+assign [class="chrome|Chromium|Opera|Firefox|Brave-browser"] $ws1
+assign [class="jetbrains-idea|Code|VSCodium"] $ws2
+# assign [class="URxvt"] $ws3
+assign [class="Steam"] $ws4
+assign [class="Spotify"] $ws5
 
 ###############################
 #            MISC             #
 ###############################
+# Splits "inteligent"
+# exec --no-startup-id ~/.config/i3/alternating_layouts.py
 # Applications au démarrage
 exec --no-startup-id compton
-exec --no-startup-id discord
-exec --no-startup-id spotify
-exec --no-startup-id easystroke
-exec --no-startup-id redshift -l 43.610769:3.876716 -t 6500:3500 -l manual
+
+exec --no-startup-id feh --randomize --bg-scale ~/Images/wallpapers/**/* # charge un fond d'ecran au hasard
+exec --no-startup-id numlockx # TODO trouver la commande qui permettra d'avoir le vernum d'active a l'allumage du pc
+exec --no-startup-id nm-applet # pour avoir accès au menu du wifi
+exec --no-startup-id brave
+exec --no-startup-id code
+exec --no-startup-id urxvt
+
+exec --no-startup-id redshift -l 48.836755:2.290816 -t 6500:4500 -l manual
 # Pamac Manager a besoin de ça pour gérer l'authentification
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
@@ -226,4 +236,4 @@ smart_borders on
 smart_gaps on
 
 # Redémarre polybar quand on redémarre i3
-exec_always --no-startup-id "killall polybar;polybar -r center & polybar -r left & polybar -r right"
+exec_always --no-startup-id "killall polybar;polybar -r default"
